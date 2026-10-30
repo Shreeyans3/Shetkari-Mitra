@@ -1,0 +1,937 @@
+<section class="ai-engine-container">
+  <div class="engine-hero-header">
+    <div class="header-text-group">
+      <span class="engine-badge" data-en="Statewide Market Forecasting" data-mr="महाराष्ट्र राज्यव्यापी बाजारभाव अंदाज">
+        Statewide Market Forecasting
+      </span>
+      <h1 data-en="Mandi Price Forecast & Harvest Advisory" data-mr="कृषी बाजारभाव अंदाज व विक्री सल्लागार">
+        Mandi Price Forecast & Harvest Advisory
+      </h1>
+      <p class="engine-subtitle"
+         data-en="Dual-horizon wholesale price predictions (5, 7, and 14 days) backed by gradient-boosted tree models and harvest timing recommendations."
+         data-mr="५, ७ आणि १४ दिवसांचा कृषी उत्पन्न बाजारभाव अंदाज आणि नफाक्षम विक्री/थांबण्याचा स्मार्ट शेतकरी सल्ला.">
+        Dual-horizon wholesale price predictions (5, 7, and 14 days) backed by gradient-boosted tree models and harvest timing recommendations.
+      </p>
+    </div>
+    
+    <div class="header-btn-group">
+      <button type="button" class="btn-voice-large" onclick="startVoiceInput()" id="mic-btn" title="Speak in Marathi or English">
+        <span class="mic-icon-large">🎙️</span>
+        <div class="mic-label-group">
+          <span class="mic-primary-text" id="voice-btn-primary" data-en="Voice Search (मराठी / English)" data-mr="बोलून शोधा (मराठी / इंग्रजी)">
+            Voice Search (मराठी / English)
+          </span>
+          <span class="mic-secondary-text" id="voice-btn-secondary" data-en="Tap to speak your mandi and crop" data-mr="जिल्हा, बाजार समिती किंवा पीक बोला">
+            Tap to speak your mandi and crop
+          </span>
+        </div>
+      </button>
+    </div>
+  </div>
+
+  <div id="voice-status" class="voice-notification-bar" style="display: none;"></div>
+
+  <form id="prediction-form" class="mandi-form-elevated" onsubmit="handleForecast(event)">
+    <div class="form-inputs-grid">
+      <div class="input-card">
+        <label for="district-select">
+          <span class="field-icon">📍</span>
+          <span id="lbl-dist" data-en="District (जिल्हा)" data-mr="जिल्हा (District)">District (जिल्हा)</span>
+        </label>
+        <div class="select-field-wrap">
+          <select id="district-select" required onchange="onDistrictChange()">
+            <option value="">-- Select District --</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="input-card">
+        <label for="market-select">
+          <span class="field-icon">🏛️</span>
+          <span id="lbl-mkt" data-en="APMC Mandi (बाजार समिती)" data-mr="बाजार समिती (APMC Mandi)">APMC Mandi (बाजार समिती)</span>
+        </label>
+        <div class="select-field-wrap">
+          <select id="market-select" required onchange="onMarketChange()">
+            <option value="">-- Select Market --</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="input-card">
+        <label for="commodity-select">
+          <span class="field-icon">🥬</span>
+          <span id="lbl-crop" data-en="Available Produce / Crop (भाजीपाला)" data-mr="उपलब्ध भाजीपाला / पीक (Crop)">Available Produce / Crop (भाजीपाला)</span>
+        </label>
+        <div class="select-field-wrap">
+          <select id="commodity-select" required>
+            <option value="">-- Select APMC Mandi First --</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="submit-action-row">
+      <button type="submit" class="btn-forecast-submit" id="predict-btn">
+        <span id="btn-submit-text" data-en="📊 Calculate Price Forecast & Advisory" data-mr="📊 बाजारभाव अंदाज व विक्री सल्ला मिळवा">
+          📊 Calculate Price Forecast & Advisory
+        </span>
+      </button>
+    </div>
+  </form>
+
+  <div class="platform-features-bar">
+    <div class="feature-item">
+      <span class="feat-icon">🎯</span>
+      <div>
+        <b data-en="Verified Accuracy" data-mr="अचूक बाजार अंदाज">Verified Accuracy</b>
+        <p data-en="Trained on 118 Statewide Market Series across Maharashtra."
+           data-mr="महाराष्ट्रातील ११८ बाजारपेठ मालिकांवर प्रशिक्षित AI मॉडेल.">
+          Trained on 118 Statewide Market Series across Maharashtra.
+        </p>
+      </div>
+    </div>
+
+    <div class="feature-item">
+      <span class="feat-icon">⚖️</span>
+      <div>
+        <b data-en="Profit-Aware Logic" data-mr="नफा वाढवणारा सल्ला">Profit-Aware Logic</b>
+        <p data-en="Evaluates crop perishability and cold holding costs."
+           data-mr="भाजीपाल्याची नाशवंतता आणि साठवणूक खर्चाचा अचूक विचार.">
+          Evaluates crop perishability and cold holding costs.
+        </p>
+      </div>
+    </div>
+
+    <div class="feature-item">
+      <span class="feat-icon">⚡</span>
+      <div>
+        <b data-en="Instant Delivery" data-mr="तत्काळ निर्णय">Instant Delivery</b>
+        <p data-en="Sub-15ms real-time multi-horizon auction projection."
+           data-mr="१५ मिलीसेकंदांत जलद ५, ७ आणि १४ दिवसांचा अंदाज.">
+          Sub-15ms real-time multi-horizon auction projection.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div id="forecast-result" class="forecast-result-wrapper" style="display: none;"></div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+  .ai-engine-container {
+    max-width: 1040px;
+    margin: 40px auto 70px;
+    padding: clamp(28px, 4.5vw, 48px);
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 24px;
+    box-shadow: 0 10px 32px rgba(0, 0, 0, 0.04);
+  }
+  .engine-hero-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 28px;
+    margin-bottom: 38px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .header-text-group { min-width: 0; }
+  .header-btn-group { flex-shrink: 0; }
+  .engine-badge {
+    display: inline-block;
+    font-size: 11.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: #166534;
+    background: #f0fdf4;
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: 1px solid #bbf7d0;
+    margin-bottom: 12px;
+  }
+  .header-text-group h1 {
+    font-size: clamp(22px, 2.6vw, 30px);
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0;
+    line-height: 1.3;
+  }
+  .engine-subtitle {
+    font-size: 15px;
+    color: #64748b;
+    margin: 12px 0 0;
+    line-height: 1.6;
+  }
+  .btn-voice-large {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 22px;
+    min-width: 290px;
+    max-width: 320px;
+    background: #f8fafc;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+  }
+  .btn-voice-large:hover {
+    background: #f0fdf4;
+    border-color: #166534;
+    box-shadow: 0 6px 18px rgba(22, 101, 52, 0.12);
+  }
+  .mic-icon-large { font-size: 28px; flex-shrink: 0; }
+  .mic-label-group { display: flex; flex-direction: column; min-width: 0; }
+  .mic-primary-text {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #0f172a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .mic-secondary-text {
+    font-size: 12px;
+    color: #64748b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .voice-notification-bar {
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-left: 5px solid #166534;
+    border-radius: 14px;
+    padding: 18px 22px;
+    font-size: 14px;
+    color: #0f172a;
+    margin-bottom: 32px;
+    line-height: 1.6;
+  }
+  .form-inputs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+  .input-card {
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 16px;
+    padding: 16px 20px;
+    transition: all 0.2s;
+  }
+  .input-card:focus-within {
+    border-color: #166534;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(22, 101, 52, 0.08);
+  }
+  .input-card label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #475569;
+    margin-bottom: 10px;
+  }
+  .select-field-wrap select {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    font-weight: 600;
+    color: #0f172a;
+    outline: none;
+    cursor: pointer;
+    padding: 4px 0;
+  }
+  .submit-action-row {
+    margin-top: 14px;
+    margin-bottom: 24px;
+  }
+  .btn-forecast-submit {
+    width: 100%;
+    height: 56px;
+    background: #1e3a29;
+    color: #ffffff;
+    border: none;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.15s ease;
+  }
+  .btn-forecast-submit:hover {
+    background: #14281c;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(20, 40, 28, 0.2);
+  }
+  .btn-forecast-submit:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
+    transform: none;
+  }
+  .platform-features-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 18px;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid #f1f5f9;
+  }
+  .feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+  .feat-icon { font-size: 22px; line-height: 1; }
+  .feature-item b {
+    font-size: 13.5px;
+    color: #0f172a;
+    display: block;
+    margin-bottom: 3px;
+  }
+  .feature-item p {
+    font-size: 12px;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.5;
+  }
+  .result-card-elevated {
+    margin-top: 42px;
+    background: #fafaf9;
+    border: 1px solid #e2e8f0;
+    border-radius: 22px;
+    padding: clamp(22px, 4vw, 36px);
+  }
+  .result-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .commodity-headline h3 {
+    font-size: 25px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0;
+  }
+  .current-price-badge { font-size: 15px; color: #475569; margin: 8px 0 0; }
+  .current-price-badge b { color: #166534; font-size: 17.5px; }
+  .staleness-tag {
+    font-size: 12px;
+    background: #e2e8f0;
+    padding: 3px 10px;
+    border-radius: 6px;
+    color: #475569;
+    font-weight: 600;
+    margin-left: 8px;
+  }
+  .decision-badge-pill {
+    padding: 11px 24px;
+    border-radius: 999px;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+  }
+  .decision-badge-pill.wait {
+    background: #dcfce7;
+    color: #15803d;
+    border: 1.5px solid #86efac;
+  }
+  .decision-badge-pill.sell {
+    background: #fee2e2;
+    color: #b91c1c;
+    border: 1.5px solid #fca5a5;
+  }
+  .advisory-banner-box {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-left: 5px solid #166534;
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin: 26px 0;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #1e293b;
+  }
+  .advisory-banner-box.sell-border { border-left-color: #dc2626; }
+  .horizons-cards-layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 20px;
+    margin-bottom: 34px;
+  }
+  .horizon-stat-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  }
+  .horizon-stat-card.featured-horizon {
+    border: 2px solid #166534;
+    background: #f0fdf4;
+  }
+  .featured-tag {
+    position: absolute;
+    top: -11px;
+    right: 16px;
+    background: #166534;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 3px 10px;
+    border-radius: 999px;
+    text-transform: uppercase;
+  }
+  .h-title { font-size: 13.5px; font-weight: 700; color: #64748b; }
+  .h-target-date { font-size: 12px; color: #94a3b8; }
+  .h-price-value { font-size: 25px; font-weight: 900; color: #0f172a; margin: 4px 0; }
+  .h-change-chip {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 800;
+  }
+  .h-change-chip.positive { background: #dcfce7; color: #15803d; }
+  .h-change-chip.negative { background: #fee2e2; color: #b91c1c; }
+  .chart-canvas-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    padding: 26px;
+  }
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .chart-header h4 { font-size: 16.5px; font-weight: 700; color: #1e293b; margin: 0; }
+  .canvas-container { position: relative; height: 280px; width: 100%; }
+
+  @media (max-width: 768px) {
+    .engine-hero-header { grid-template-columns: 1fr; }
+    .btn-voice-large { max-width: 100%; min-width: 100%; }
+  }
+</style>
+
+<script>
+let dropdownData = null;
+let priceChartInstance = null;
+let currentLanguage = localStorage.getItem("shetkari_language") || "en";
+
+const CROP_TRANSLATIONS = {
+  "Tomato": { en: "Tomato", mr: "टोमॅटो (Tomato)" },
+  "Onion": { en: "Onion", mr: "कांदा (Onion)" },
+  "Potato": { en: "Potato", mr: "बटाटा (Potato)" },
+  "Green Chilli": { en: "Green Chilli", mr: "हिरवी मिरची (Green Chilli)" },
+  "Brinjal": { en: "Brinjal", mr: "वांगी (Brinjal)" },
+  "Cabbage": { en: "Cabbage", mr: "कोबी (Cabbage)" },
+  "Cauliflower": { en: "Cauliflower", mr: "फ्लॉवर (Cauliflower)" },
+  "Bhindi(Ladies Finger)": { en: "Bhindi (Ladies Finger)", mr: "भेंडी (Bhindi)" }
+};
+
+async function loadDropdowns() {
+  try {
+    const res = await fetch("/api/dropdown-options");
+    dropdownData = await res.json();
+
+    const distSelect = document.getElementById("district-select");
+    const defaultDistText = currentLanguage === "mr" ? "-- जिल्हा निवडा --" : "-- Select District --";
+    distSelect.innerHTML = '<option value="">' + defaultDistText + '</option>';
+    dropdownData.districts.forEach(d => {
+      distSelect.innerHTML += '<option value="' + d + '">' + d + '</option>';
+    });
+
+    const commSelect = document.getElementById("commodity-select");
+    const defaultCropText = currentLanguage === "mr" ? "-- प्रथम बाजार समिती निवडा --" : "-- Select APMC Mandi First --";
+    commSelect.innerHTML = '<option value="">' + defaultCropText + '</option>';
+  } catch (err) {
+    console.error("Could not load dropdown options:", err);
+  }
+}
+
+function onDistrictChange() {
+  const dist = document.getElementById("district-select").value;
+  const mktSelect = document.getElementById("market-select");
+  const commSelect = document.getElementById("commodity-select");
+
+  const defaultMktText = currentLanguage === "mr" ? "-- बाजार समिती निवडा --" : "-- Select Market --";
+  const defaultCropText = currentLanguage === "mr" ? "-- प्रथम बाजार समिती निवडा --" : "-- Select APMC Mandi First --";
+
+  mktSelect.innerHTML = '<option value="">' + defaultMktText + '</option>';
+  commSelect.innerHTML = '<option value="">' + defaultCropText + '</option>';
+
+  if (dropdownData && dropdownData.markets_by_district[dist]) {
+    dropdownData.markets_by_district[dist].forEach(m => {
+      mktSelect.innerHTML += '<option value="' + m + '">' + m + '</option>';
+    });
+  }
+}
+
+function onMarketChange() {
+  const mkt = document.getElementById("market-select").value;
+  const commSelect = document.getElementById("commodity-select");
+
+  const defaultCropText = currentLanguage === "mr" ? "-- पीक निवडा --" : "-- Select Crop --";
+  commSelect.innerHTML = '<option value="">' + defaultCropText + '</option>';
+
+  if (dropdownData && dropdownData.commodities_by_market && dropdownData.commodities_by_market[mkt]) {
+    const crops = dropdownData.commodities_by_market[mkt];
+    crops.forEach(c => {
+      const label = CROP_TRANSLATIONS[c] ? CROP_TRANSLATIONS[c][currentLanguage] : c;
+      commSelect.innerHTML += '<option value="' + c + '">' + label + '</option>';
+    });
+  } else if (dropdownData && dropdownData.commodities) {
+    dropdownData.commodities.forEach(c => {
+      const label = CROP_TRANSLATIONS[c] ? CROP_TRANSLATIONS[c][currentLanguage] : c;
+      commSelect.innerHTML += '<option value="' + c + '">' + label + '</option>';
+    });
+  }
+}
+
+function onLanguageChange(lang) {
+  currentLanguage = lang;
+  
+  const distSelect = document.getElementById("district-select");
+  if (distSelect && distSelect.options.length > 0 && distSelect.options[0].value === "") {
+    distSelect.options[0].text = lang === "mr" ? "-- जिल्हा निवडा --" : "-- Select District --";
+  }
+
+  const mktSelect = document.getElementById("market-select");
+  if (mktSelect && mktSelect.options.length > 0 && mktSelect.options[0].value === "") {
+    mktSelect.options[0].text = lang === "mr" ? "-- बाजार समिती निवडा --" : "-- Select Market --";
+  }
+
+  if (mktSelect && mktSelect.value) {
+    const savedCrop = document.getElementById("commodity-select").value;
+    onMarketChange();
+    if (savedCrop) {
+      document.getElementById("commodity-select").value = savedCrop;
+    }
+  } else {
+    const commSelect = document.getElementById("commodity-select");
+    if (commSelect) {
+      commSelect.innerHTML = '<option value="">' + (lang === "mr" ? "-- प्रथम बाजार समिती निवडा --" : "-- Select APMC Mandi First --") + '</option>';
+    }
+  }
+}
+
+async function handleForecast(e) {
+  if (e) e.preventDefault();
+  const district = document.getElementById("district-select").value;
+  const market = document.getElementById("market-select").value;
+  const commodity = document.getElementById("commodity-select").value;
+  const btn = document.getElementById("predict-btn");
+  const resBox = document.getElementById("forecast-result");
+
+  if (!district || !market || !commodity) {
+    const msg = currentLanguage === "mr" ? "कृपया जिल्हा, बाजार समिती आणि पीक निवडा." : "Please select District, APMC Mandi, and Crop.";
+    alert(msg);
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span>' + (currentLanguage === "mr" ? "⏳ कृषी बाजार माहितीचे विश्लेषण सुरू आहे..." : "⏳ Computing Wholesale Market Dynamics...") + '</span>';
+  resBox.style.display = "none";
+
+  try {
+    const resp = await fetch("/api/predict?district=" + encodeURIComponent(district) + "&market=" + encodeURIComponent(market) + "&commodity=" + encodeURIComponent(commodity));
+    const data = await resp.json();
+
+    if (data.error) {
+      resBox.innerHTML = '<p class="message error">' + data.error + '</p>';
+      resBox.style.display = "block";
+      return;
+    }
+
+    const isWait = data.advisory.decision.indexOf("WAIT") > -1;
+    const badgeClass = isWait ? "wait" : "sell";
+    const borderClass = isWait ? "" : "sell-border";
+    
+    const decisionText = currentLanguage === "mr"
+      ? (isWait ? "🟢 थांबा (माल राखून ठेवा)" : "🔴 लगेच विक्री करा")
+      : (isWait ? "🟢 WAIT (HOLD)" : "🔴 SELL NOW");
+
+    const rateLabel = currentLanguage === "mr" ? "सध्याचा बाजारभाव:" : "Latest Modal Auction Rate:";
+    const quintalLabel = currentLanguage === "mr" ? "प्रति क्विंटल" : "/ quintal";
+    const stalenessText = currentLanguage === "mr" ? (data.data_staleness_days === 0 ? "नवीन माहिती" : data.data_staleness_days + " दिवस जुनी माहिती") : data.staleness_warning;
+    const advisoryTitle = currentLanguage === "mr" ? "💡 विक्री वेळ सल्ला:" : "💡 Harvest Timing Advisory:";
+
+    let out = '';
+    out += '<div class="result-card-elevated">';
+    out += '  <div class="result-topbar">';
+    out += '    <div class="commodity-headline">';
+    out += '      <h3>' + data.commodity.toUpperCase() + ' • ' + data.market + ' (' + data.district + ')</h3>';
+    out += '      <p class="current-price-badge">' + rateLabel + ' <b>₹' + data.current_price_rs_quintal.toLocaleString('en-IN') + ' ' + quintalLabel + '</b> <span class="staleness-tag">' + stalenessText + '</span></p>';
+    out += '    </div>';
+    out += '    <div class="decision-badge-pill ' + badgeClass + '">';
+    out += '      <span>' + decisionText + '</span>';
+    out += '    </div>';
+    out += '  </div>';
+
+    out += '  <div class="advisory-banner-box ' + borderClass + '">';
+    out += '    <b>' + advisoryTitle + '</b> ' + data.advisory.reason;
+    out += '  </div>';
+
+    out += '  <div class="horizons-cards-layout">';
+    const d5 = data.forecasts.day_5;
+    const chg5Class = d5.expected_change_pct >= 0 ? 'positive' : 'negative';
+    const chg5Sign = d5.expected_change_pct >= 0 ? '+' : '';
+    out += '    <div class="horizon-stat-card">';
+    out += '      <span class="h-title">' + (currentLanguage === "mr" ? "५-दिवसांचा अंदाज" : "5-Day Outlook") + '</span>';
+    out += '      <span class="h-target-date">' + d5.target_date + '</span>';
+    out += '      <span class="h-price-value">₹' + d5.predicted_price_rs_quintal.toLocaleString('en-IN') + '</span>';
+    out += '      <span class="h-change-chip ' + chg5Class + '">' + chg5Sign + d5.expected_change_pct + '%</span>';
+    out += '    </div>';
+
+    const d7 = data.forecasts.day_7;
+    const chg7Class = d7.expected_change_pct >= 0 ? 'positive' : 'negative';
+    const chg7Sign = d7.expected_change_pct >= 0 ? '+' : '';
+    out += '    <div class="horizon-stat-card featured-horizon">';
+    out += '      <span class="featured-tag">' + (currentLanguage === "mr" ? "मुख्य अंदाज" : "Primary Horizon") + '</span>';
+    out += '      <span class="h-title">' + (currentLanguage === "mr" ? "७-दिवसांचा अंदाज" : "7-Day Outlook") + '</span>';
+    out += '      <span class="h-target-date">' + d7.target_date + '</span>';
+    out += '      <span class="h-price-value">₹' + d7.predicted_price_rs_quintal.toLocaleString('en-IN') + '</span>';
+    out += '      <span class="h-change-chip ' + chg7Class + '">' + chg7Sign + d7.expected_change_pct + '%</span>';
+    out += '    </div>';
+
+    const d14 = data.forecasts.day_14;
+    const chg14Class = d14.expected_change_pct >= 0 ? 'positive' : 'negative';
+    const chg14Sign = d14.expected_change_pct >= 0 ? '+' : '';
+    out += '    <div class="horizon-stat-card">';
+    out += '      <span class="h-title">' + (currentLanguage === "mr" ? "१४-दिवसांचा अंदाज" : "14-Day Outlook") + '</span>';
+    out += '      <span class="h-target-date">' + d14.target_date + '</span>';
+    out += '      <span class="h-price-value">₹' + d14.predicted_price_rs_quintal.toLocaleString('en-IN') + '</span>';
+    out += '      <span class="h-change-chip ' + chg14Class + '">' + chg14Sign + d14.expected_change_pct + '%</span>';
+    out += '    </div>';
+    out += '  </div>';
+
+    out += '  <div class="chart-canvas-card">';
+    out += '    <div class="chart-header">';
+    out += '      <h4>' + (currentLanguage === "mr" ? "📈 १४-दिवसीय बाजारभाव चढ-उतार आलेख" : "📈 14-Day Price Trajectory Curve") + '</h4>';
+    out += '      <span style="font-size:12.5px; color:#64748b; font-weight:600;">' + (currentLanguage === "mr" ? "अपेक्षित बाजारभाव (₹ / क्विंटल)" : "Wholesale Auction Projection (₹ / Quintal)") + '</span>';
+    out += '    </div>';
+    out += '    <div class="canvas-container">';
+    out += '      <canvas id="priceTrendChart"></canvas>';
+    out += '    </div>';
+    out += '  </div>';
+
+    // Smart Profit & Storage Estimator
+    const pToday = data.current_price_rs_quintal;
+    const p7 = data.forecasts.day_7.predicted_price_rs_quintal;
+
+    out += '  <div class="calculator-card" style="margin-top: 28px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 18px; padding: 24px; box-shadow: 0 4px 14px rgba(0,0,0,0.03);">';
+    out += '    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">';
+    out += '      <h4 style="margin: 0; font-size: 16.5px; font-weight: 800; color: #0f172a;">';
+    out += '        🧮 ' + (currentLanguage === "mr" ? "शेतकरी नफा व साठवणूक खर्च गणक" : "Smart Harvest Profit & Holding Cost Estimator");
+    out += '      </h4>';
+    out += '      <span style="font-size: 11.5px; font-weight: 700; color: #166534; background: #dcfce7; padding: 4px 12px; border-radius: 999px;">';
+    out += '        ' + (currentLanguage === "mr" ? "थेट नफा अंदाज" : "Live ROI Calculator");
+    out += '      </span>';
+    out += '    </div>';
+    out += '    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 18px;">';
+    out += '      <div style="background: #f8fafc; padding: 12px 16px; border-radius: 12px; border: 1px solid #e2e8f0;">';
+    out += '        <label style="font-size: 12.5px; font-weight: 700; color: #64748b; display: block; margin-bottom: 6px;">';
+    out += '          ' + (currentLanguage === "mr" ? "विक्री प्रमाण (क्विंटल):" : "Harvest Quantity (Quintals):");
+    out += '        </label>';
+    out += '        <input type="number" id="calc-qty" value="50" min="1" max="1000" oninput="updateProfitCalc(' + pToday + ', ' + p7 + ')" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 12px; font-weight: 700; font-size: 15px; background: #ffffff;">';
+    out += '      </div>';
+    out += '      <div style="background: #f8fafc; padding: 12px 16px; border-radius: 12px; border: 1px solid #e2e8f0;">';
+    out += '        <label style="font-size: 12.5px; font-weight: 700; color: #64748b; display: block; margin-bottom: 6px;">';
+    out += '          ' + (currentLanguage === "mr" ? "साठवणूक खर्च (₹ / क्विंटल / दिवस):" : "Holding/Storage Cost (₹ / q / day):");
+    out += '        </label>';
+    out += '        <input type="number" id="calc-cost" value="3.5" min="0" step="0.5" oninput="updateProfitCalc(' + pToday + ', ' + p7 + ')" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 12px; font-weight: 700; font-size: 15px; background: #ffffff;">';
+    out += '      </div>';
+    out += '    </div>';
+    out += '    <div id="calc-summary" style="background: #f8fafc; border-left: 4px solid #166534; border-radius: 12px; padding: 16px 20px; font-size: 14px; line-height: 1.7; color: #1e293b;"></div>';
+    out += '  </div>';
+
+    out += '</div>';
+
+    resBox.innerHTML = out;
+    resBox.style.display = "block";
+    renderChart(data);
+    updateProfitCalc(pToday, p7);
+
+  } catch (err) {
+    resBox.innerHTML = '<p class="message error">' + (currentLanguage === "mr" ? "अंदाज मिळवण्यात त्रुटी आली." : "Failed to retrieve predictions.") + '</p>';
+    resBox.style.display = "block";
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<span id="btn-submit-text">' + (currentLanguage === "mr" ? "📊 बाजारभाव अंदाज व विक्री सल्ला मिळवा" : "📊 Calculate Price Forecast & Advisory") + '</span>';
+  }
+}
+
+function updateProfitCalc(pToday, p7) {
+  const qty = parseFloat(document.getElementById("calc-qty").value) || 0;
+  const dailyCost = parseFloat(document.getElementById("calc-cost").value) || 0;
+
+  const totalToday = qty * pToday;
+  const total7Days = qty * p7;
+  const storageCost = qty * dailyCost * 7;
+  const net7Days = total7Days - storageCost;
+  const netDiff = net7Days - totalToday;
+  const isProfitable = netDiff > 0;
+
+  const summary = document.getElementById("calc-summary");
+  if (!summary) return;
+
+  const color = isProfitable ? "#15803d" : "#b91c1c";
+  const symbol = isProfitable ? "+" : "";
+
+  if (currentLanguage === "mr") {
+    summary.innerHTML =
+      "• आज विक्री केल्यास उत्पन्न: <b>₹" + totalToday.toLocaleString('en-IN', {maximumFractionDigits: 0}) + "</b><br>" +
+      "• ७ दिवस थांबल्यास अपेक्षित उत्पन्न: <b>₹" + total7Days.toLocaleString('en-IN', {maximumFractionDigits: 0}) + "</b><br>" +
+      "• ७ दिवसांचा साठवणूक खर्च: <b style='color: #64748b;'>-₹" + storageCost.toLocaleString('en-IN', {maximumFractionDigits: 0}) + "</b><br>" +
+      "<div style='margin-top: 8px; padding-top: 8px; border-top: 1px dashed #cbd5e1; font-size: 15px; font-weight: 800; color: " + color + ";'>" +
+        (isProfitable ? "✅ थांबल्यास निव्वळ अतिरिक्त नफा: " : "⚠️ आजच विकणे फायदेशीर (साठवणुकीमुळे नुकसान): ") +
+        symbol + "₹" + netDiff.toLocaleString('en-IN', {maximumFractionDigits: 0}) +
+      "</div>";
+  } else {
+    summary.innerHTML =
+      "• Total Value Selling Today: <b>₹" + totalToday.toLocaleString('en-IN', {maximumFractionDigits: 0}) + "</b><br>" +
+      "• Projected Value After 7 Days: <b>₹" + total7Days.toLocaleString('en-IN', {maximumFractionDigits: 0}) + "</b><br>" +
+      "• 7-Day Storage & Holding Cost: <b style='color: #64748b;'>-₹" + storageCost.toLocaleString('en-IN', {maximumFractionDigits: 0}) + "</b><br>" +
+      "<div style='margin-top: 8px; padding-top: 8px; border-top: 1px dashed #cbd5e1; font-size: 15px; font-weight: 800; color: " + color + ";'>" +
+        (isProfitable ? "✅ Net Profit Gain by Waiting: " : "⚠️ Net Loss by Waiting (Holding cost exceeds price rise): ") +
+        symbol + "₹" + netDiff.toLocaleString('en-IN', {maximumFractionDigits: 0}) +
+      "</div>";
+  }
+}
+
+function renderChart(data) {
+  const ctx = document.getElementById("priceTrendChart").getContext("2d");
+  if (priceChartInstance) {
+    priceChartInstance.destroy();
+  }
+
+  const todayLabel = currentLanguage === "mr" ? "आज (" + data.last_recorded_date + ")" : "Today (" + data.last_recorded_date + ")";
+  const d5Label = currentLanguage === "mr" ? "५-दिवस (" + data.forecasts.day_5.target_date + ")" : "5-Day (" + data.forecasts.day_5.target_date + ")";
+  const d7Label = currentLanguage === "mr" ? "७-दिवस (" + data.forecasts.day_7.target_date + ")" : "7-Day (" + data.forecasts.day_7.target_date + ")";
+  const d14Label = currentLanguage === "mr" ? "१४-दिवस (" + data.forecasts.day_14.target_date + ")" : "14-Day (" + data.forecasts.day_14.target_date + ")";
+
+  const labels = [todayLabel, d5Label, d7Label, d14Label];
+  const prices = [
+    data.current_price_rs_quintal,
+    data.forecasts.day_5.predicted_price_rs_quintal,
+    data.forecasts.day_7.predicted_price_rs_quintal,
+    data.forecasts.day_14.predicted_price_rs_quintal
+  ];
+
+  const isUp = data.forecasts.day_7.expected_change_pct >= 0;
+  const strokeColor = isUp ? "#166534" : "#b91c1c";
+  const fillColor = isUp ? "rgba(22, 101, 52, 0.08)" : "rgba(185, 28, 28, 0.08)";
+
+  priceChartInstance = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: labels,
+      datasets: [{
+        label: currentLanguage === "mr" ? "अपेक्षित बाजारभाव" : "Projected Price",
+        data: prices,
+        borderColor: strokeColor,
+        backgroundColor: fillColor,
+        fill: true,
+        tension: 0.3,
+        borderWidth: 2.5,
+        pointBackgroundColor: strokeColor,
+        pointBorderColor: "#ffffff",
+        pointBorderWidth: 2,
+        pointRadius: 5
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: "#0f172a",
+          padding: 10,
+          callbacks: {
+            label: function(c) {
+              return " ₹ " + c.parsed.y.toLocaleString("en-IN") + " " + (currentLanguage === "mr" ? "/ क्विंटल" : "/ quintal");
+            }
+          }
+        }
+      },
+      scales: {
+        x: { grid: { display: false } },
+        y: {
+          grid: { color: "#f1f5f9" },
+          ticks: { callback: function(v) { return "₹" + v; } }
+        }
+      }
+    }
+  });
+}
+
+const MARKET_RULES = [
+  { dist: "Ahilyanagar", mkt: "APMC Sangamner", keys: ["संगमनेर", "sangamner"] },
+  { dist: "Akola", mkt: "APMC Akola", keys: ["अकोला", "akola"] },
+  { dist: "Amarawati", mkt: "Amrawati(Frui & Veg. Market)", keys: ["अमरावती", "amravati", "amarawati"] },
+  { dist: "Chattrapati Sambhajinagar", mkt: "APMC Chattrapati Sambhajinagar", keys: ["संभाजीनगर", "औरंगाबाद", "sambhajinagar", "aurangabad"] },
+  { dist: "Dharashiv", mkt: "APMC Dharashiv", keys: ["धाराशिव", "उस्मानाबाद", "dharashiv", "osmanabad"] },
+  { dist: "Dhule", mkt: "APMC Dhule", keys: ["धुळे", "dhule"] },
+  { dist: "Jalgaon", mkt: "APMC Jalgaon", keys: ["जळगाव", "जलगाव", "jalgaon"] },
+  { dist: "Kolhapur", mkt: "APMC Kolhapur", keys: ["कोल्हापूर", "kolhapur", "shahu"] },
+  { dist: "Nagpur", mkt: "APMC Nagpur", keys: ["नागपूर", "कळमणा", "nagpur", "kalamna"] },
+  { dist: "Nashik", mkt: "APMC Lasalgaon", keys: ["लासलगाव", "lasalgaon"] },
+  { dist: "Nashik", mkt: "APMC Pimpalgaon Baswant", keys: ["पिंपळगाव", "पिंपलगाव", "pimpalgaon", "baswant"] },
+  { dist: "Pune", mkt: "APMC Pune", keys: ["गुलटेकडी", "मार्केट यार्ड", "gultekdi", "pune apmc"] },
+  { dist: "Pune", mkt: "Junnar(Narayangaon)", keys: ["नारायणगाव", "जुन्नर", "narayangaon", "junnar"] },
+  { dist: "Pune", mkt: "Pune(Pimpri)", keys: ["पिंपरी", "pimpri", "चिंचवड"] },
+  { dist: "Raigad", mkt: "APMC Panvel", keys: ["पनवेल", "panvel"] },
+  { dist: "Ratnagiri", mkt: "APMC Ratnagiri (Nachane)", keys: ["रत्नागिरी", "नाचणे", "ratnagiri", "nachane"] },
+  { dist: "Satara", mkt: "APMC Karad", keys: ["कराड", "karad"] },
+  { dist: "Satara", mkt: "APMC Satara", keys: ["सातारा", "satara"] },
+  { dist: "Solapur", mkt: "APMC Solapur", keys: ["सोलापूर", "solapur"] },
+  { dist: "Thane", mkt: "APMC Kalyan", keys: ["कल्याण", "kalyan"] }
+];
+
+const DISTRICT_RULES = [
+  { dist: "Ahilyanagar", keys: ["अहिल्यानगर", "अहमदनगर", "ahilyanagar", "ahmednagar", "नगर"] },
+  { dist: "Thane", keys: ["ठाणे", "thane"] },
+  { dist: "Pune", keys: ["पुणे", "pune"] },
+  { dist: "Nashik", keys: ["नाशिक", "nashik"] },
+  { dist: "Kolhapur", keys: ["कोल्हापूर", "kolhapur"] },
+  { dist: "Solapur", keys: ["सोलापूर", "solapur"] },
+  { dist: "Nagpur", keys: ["नागपूर", "nagpur"] },
+  { dist: "Satara", keys: ["सातारा", "satara"] },
+  { dist: "Raigad", keys: ["रायगड", "raigad"] },
+  { dist: "Ratnagiri", keys: ["रत्नागिरी", "ratnagiri"] },
+  { dist: "Jalgaon", keys: ["जळगाव", "jalgaon"] },
+  { dist: "Dhule", keys: ["धुळे", "dhule"] },
+  { dist: "Akola", keys: ["अकोला", "akola"] },
+  { dist: "Amarawati", keys: ["अमरावती", "amravati"] },
+  { dist: "Dharashiv", keys: ["धाराशिव", "dharashiv"] },
+  { dist: "Chattrapati Sambhajinagar", keys: ["संभाजीनगर", "sambhajinagar"] }
+];
+
+const COMMODITY_RULES = [
+  { comm: "Tomato", keys: ["टोमॅटो", "टोमॅट", "टमाटर", "tomato", "tamatar"] },
+  { comm: "Onion", keys: ["कांदा", "कांद", "onion", "kanda", "pyaz"] },
+  { comm: "Potato", keys: ["बटाटा", "बटाट", "आलू", "potato", "batata", "aloo"] },
+  { comm: "Green Chilli", keys: ["मिरची", "मिरच", "chilli", "chili", "mirchi"] },
+  { comm: "Brinjal", keys: ["वांगी", "वांग", "brinjal", "eggplant", "vangi", "baingan"] },
+  { comm: "Cabbage", keys: ["कोबी", "cabbage", "kobi", "patta kobi"] },
+  { comm: "Cauliflower", keys: ["फ्लॉवर", "फुलकोबी", "फूलकोबी", "cauliflower", "flower"] },
+  { comm: "Bhindi(Ladies Finger)", keys: ["भेंडी", "भेंड", "bhindi", "bhendi", "okra", "ladies finger"] }
+];
+
+function startVoiceInput() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const status = document.getElementById("voice-status");
+  if (!SpeechRecognition) {
+    alert("Voice recognition is supported in Google Chrome or Microsoft Edge.");
+    return;
+  }
+
+  const recognition = new SpeechRecognition();
+  recognition.lang = "mr-IN";
+  recognition.interimResults = false;
+
+  recognition.onstart = () => {
+    status.style.display = "block";
+    status.innerHTML = currentLanguage === "mr"
+      ? "🎙️ <b>ऐकत आहे...</b> बोला (उदा. 'पुणे पिंपरी कांदा भाव' किंवा 'ठाणे कल्याण बटाटा')..."
+      : "🎙️ <b>Listening...</b> Speak now (e.g. 'Pune Pimpri Onion price' or 'Thane Kalyan Potato')...";
+  };
+
+  recognition.onresult = (e) => {
+    const raw = e.results[0][0].transcript;
+    const text = raw.toLowerCase();
+
+    let matchedDist = null;
+    let matchedMkt = null;
+    let matchedComm = null;
+
+    for (let rule of MARKET_RULES) {
+      if (rule.keys.some(k => text.indexOf(k) > -1)) {
+        matchedDist = rule.dist;
+        matchedMkt = rule.mkt;
+        break;
+      }
+    }
+
+    if (!matchedDist) {
+      for (let rule of DISTRICT_RULES) {
+        if (rule.keys.some(k => text.indexOf(k) > -1)) {
+          matchedDist = rule.dist;
+          break;
+        }
+      }
+    }
+
+    for (let rule of COMMODITY_RULES) {
+      if (rule.keys.some(k => text.indexOf(k) > -1)) {
+        matchedComm = rule.comm;
+        break;
+      }
+    }
+
+    if (matchedDist) {
+      document.getElementById("district-select").value = matchedDist;
+      onDistrictChange();
+    }
+
+    if (matchedMkt) {
+      document.getElementById("market-select").value = matchedMkt;
+      onMarketChange();
+    } else if (matchedDist && dropdownData && dropdownData.markets_by_district[matchedDist]) {
+      document.getElementById("market-select").value = dropdownData.markets_by_district[matchedDist][0];
+      matchedMkt = document.getElementById("market-select").value;
+      onMarketChange();
+    }
+
+    if (matchedComm) {
+      document.getElementById("commodity-select").value = matchedComm;
+    }
+
+    status.innerHTML = '🗣️ ' + (currentLanguage === "mr" ? "तुम्ही बोललात:" : "You said:") + ' <i>"' + raw + '"</i><br>' +
+      '<b>✅ ' + (currentLanguage === "mr" ? "निवड:" : "Configured:") + '</b> ' +
+      (matchedDist ? (currentLanguage === "mr" ? 'जिल्हा: ' : 'District: ') + '<b>' + matchedDist + '</b> | ' : '') +
+      (matchedMkt ? (currentLanguage === "mr" ? 'बाजार समिती: ' : 'Mandi: ') + '<b>' + matchedMkt + '</b> | ' : '') +
+      (matchedComm ? (currentLanguage === "mr" ? 'पीक: ' : 'Crop: ') + '<b>' + (CROP_TRANSLATIONS[matchedComm] ? CROP_TRANSLATIONS[matchedComm][currentLanguage] : matchedComm) + '</b>' : (currentLanguage === "mr" ? 'पीक ओळखले नाही' : 'Crop not recognized'));
+
+    if (matchedDist && matchedMkt && matchedComm) {
+      setTimeout(() => {
+        handleForecast(null);
+      }, 500);
+    }
+  };
+
+  recognition.onerror = (err) => {
+    status.innerHTML = "⚠️ " + (currentLanguage === "mr" ? "आवाज ओळखण्यात अडचण आली: " : "Voice error: ") + err.error;
+  };
+
+  recognition.start();
+}
+
+window.addEventListener("DOMContentLoaded", loadDropdowns);
+</script>

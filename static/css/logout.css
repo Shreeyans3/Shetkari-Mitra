@@ -1,0 +1,10 @@
+/* Log-out page: confirm state, then "logged out" state */
+.logout{display:flex;justify-content:center;padding:72px 16px 96px}
+.logout-card{width:100%;max-width:440px;border:1px solid var(--line);border-radius:var(--radius);padding:40px 32px;text-align:center}
+.logout h1{font-size:28px;margin-bottom:10px}
+.logout p{color:var(--mid);font-size:15px;margin-bottom:26px}
+.logout .btn{width:100%;margin-top:12px;height:52px}
+.logout form .btn{margin-top:0}
+.logout.state-confirm .done,.logout.state-done .confirm{display:none}
+.auth{display:flex;justify-content:center;padding:48px 16px 64px}
+.auth-card{width:100%;max-width:440px;border:1px solid var(--line);border-radius:var(--radius);padding:36px 32px 28px}

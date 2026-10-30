@@ -1,0 +1,73 @@
+<section class="update">
+  <div class="topline">
+    <a class="back" href="/dashboard" aria-label="Back to dashboard">&larr; Dashboard</a>
+  </div>
+  <h1>Update profile</h1>
+  $message
+
+  <form class="panel" method="post" action="/update">
+    <input type="hidden" name="csrf" value="$csrf">
+    <h2>Personal details</h2>
+
+    <div class="grid">
+      <div>
+        <label for="u_name">Full name</label>
+        <div class="input"><input id="u_name" name="full_name" type="text" value="$full_name" autocomplete="name" required></div>
+      </div>
+      <div>
+        <label for="u_email">Email (cannot be changed)</label>
+        <div class="input is-locked"><input id="u_email" type="email" value="$email" disabled></div>
+      </div>
+      <div>
+        <label for="u_mobile">Mobile number</label>
+        <div class="input"><span class="code">+91</span><input id="u_mobile" name="mobile" type="tel" value="$mobile" inputmode="numeric" maxlength="10" pattern="[0-9]{10}" placeholder="10-digit number"></div>
+      </div>
+      <div>
+        <label for="u_dob">Date of birth</label>
+        <div class="input"><input id="u_dob" name="dob" type="date" value="$dob" autocomplete="bday"></div>
+      </div>
+    </div>
+
+    <fieldset class="group"><legend>Gender</legend>
+      <div class="segment">
+        <label><input type="radio" name="gender" value="male"$gender_male><span>Male</span></label>
+        <label><input type="radio" name="gender" value="female"$gender_female><span>Female</span></label>
+        <label><input type="radio" name="gender" value="undisclosed"$gender_undisclosed><span>Prefer not to say</span></label>
+      </div>
+    </fieldset>
+    <fieldset class="group"><legend>Marital status</legend>
+      <div class="segment">
+        <label><input type="radio" name="marital" value="married"$marital_married><span>Married</span></label>
+        <label><input type="radio" name="marital" value="unmarried"$marital_unmarried><span>Unmarried</span></label>
+        <label><input type="radio" name="marital" value="undisclosed"$marital_undisclosed><span>Prefer not to say</span></label>
+      </div>
+    </fieldset>
+
+    <h2>Change password</h2>
+    <p class="hint">Leave these two blank to keep your current password.</p>
+    <div class="grid">
+      <div>
+        <label for="u_new">New password</label>
+        <div class="input"><input id="u_new" name="new_password" type="password" minlength="8" autocomplete="new-password"></div>
+      </div>
+      <div>
+        <label for="u_new2">Confirm new password</label>
+        <div class="input"><input id="u_new2" name="confirm_new_password" type="password" minlength="8" autocomplete="new-password"></div>
+      </div>
+    </div>
+
+    <h2>Confirm it is you</h2>
+    <label for="u_current">Current password</label>
+    <div class="input narrow"><input id="u_current" name="current_password" type="password" autocomplete="current-password" required></div>
+    <button class="btn" type="submit">Save changes</button>
+  </form>
+
+  <!-- <form class="panel danger" method="post" action="/delete" onsubmit="return confirm('Delete your account permanently? This cannot be undone.');">
+    <input type="hidden" name="csrf" value="$csrf">
+    <h2>Delete account</h2>
+    <p class="hint">This removes your account and details from the database for good.</p>
+    <label for="d_pw">Current password</label>
+    <div class="input narrow"><input id="d_pw" name="delete_password" type="password" autocomplete="current-password" required></div>
+    <button class="btn btn-danger" type="submit">Delete my account</button>
+  </form>
+</section> -->

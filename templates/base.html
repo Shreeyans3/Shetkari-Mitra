@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>$title | Shetkari Mitra</title>
+<link rel="stylesheet" href="/static/css/base.css">
+<link rel="stylesheet" href="/static/css/$page_css">
+<style>
+  /* Header & Navigation Layout */
+  .site-header {
+    background: #0f172a;
+    border-bottom: 1px solid #1e293b;
+    padding: 16px 36px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+  .header-brand-wrap {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .brand-group {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+  }
+  .brand-title {
+    font-size: 21px;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+    color: #ffffff;
+  }
+  .brand-by {
+    font-size: 11px;
+    font-weight: 600;
+    color: #86efac;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+  }
+  .nav {
+    display: flex;
+    gap: 28px;
+    font-size: 14.5px;
+    font-weight: 600;
+    margin-left: 36px;
+  }
+  .nav a {
+    color: #cbd5e1;
+    padding: 6px 0;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s ease;
+    text-decoration: none;
+  }
+  .nav a:hover, .nav a.active {
+    color: #ffffff;
+    border-bottom-color: #10b981;
+  }
+
+  /* Pushes Language Switcher & Account Strictly to the Far Top-Right */
+  .header-right-zone {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  /* Language Switcher Pill */
+  .lang-toggle-wrap {
+    display: inline-flex;
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 999px;
+    padding: 3px;
+  }
+  .lang-switch-btn {
+    border: none;
+    background: transparent;
+    color: #94a3b8;
+    padding: 5px 13px;
+    font-size: 12.5px;
+    font-weight: 700;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .lang-switch-btn.active {
+    background: #10b981;
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35);
+  }
+
+  /* Auth & Account Buttons */
+  .header-auth-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .btn-auth-top {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 22px;
+    background: #166534;
+    color: #ffffff;
+    border-radius: 999px;
+    font-size: 13.5px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid #22c55e;
+  }
+  .btn-auth-top:hover {
+    background: #15803d;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.25);
+  }
+  .account-link-badge {
+    color: #f1f5f9;
+    padding: 7px 16px;
+    border-radius: 10px;
+    background: #1e293b;
+    font-size: 13.5px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s ease;
+    border: 1px solid #334155;
+  }
+  .account-link-badge:hover {
+    background: #334155;
+  }
+  .logout-link-badge {
+    color: #fca5a5;
+    font-size: 13.5px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  .logout-link-badge:hover {
+    color: #ef4444;
+  }
+
+  /* Footer */
+  .site-footer {
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 54px clamp(16px, 6vw, 64px) 60px;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 40px;
+    font-size: 13px;
+    line-height: 1.6;
+    border-top: 1px solid #1e293b;
+    margin-top: 70px;
+  }
+  .footer-about strong {
+    color: #ffffff;
+    font-size: 15px;
+    display: block;
+    margin-bottom: 8px;
+  }
+  .footer-links h2 {
+    color: #ffffff;
+    font-size: 14px;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .footer-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .footer-links li {
+    margin-bottom: 9px;
+  }
+  .footer-links a {
+    color: #94a3b8;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover {
+    color: #ffffff;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+<header class="site-header" id="top">
+  <div class="header-brand-wrap">
+    <button class="menu-btn" aria-label="Open menu" aria-controls="main-nav" aria-expanded="false">&#9776;</button>
+    <a class="brand-group" href="/">
+      <span class="brand-title">Shetkari Mitra</span>
+      <span class="brand-by">by Viksit Minds</span>
+    </a>
+  </div>
+
+  <nav class="nav" id="main-nav" aria-label="Main">$nav</nav>
+
+  <!-- Far Top-Right: Language Switcher & Authentication Zone -->
+  <div class="header-right-zone">
+    <div class="lang-toggle-wrap">
+      <button type="button" class="lang-switch-btn active" id="btn-lang-en" onclick="setLanguage('en')">English</button>
+      <button type="button" class="lang-switch-btn" id="btn-lang-mr" onclick="setLanguage('mr')">मराठी</button>
+    </div>
+    $account
+  </div>
+</header>
+
+<main>
+$content
+</main>
+
+<footer class="site-footer">
+  <div class="footer-about">
+    <p>
+      <strong data-en="Shetkari Mitra (Farmer's Friend)" data-mr="शेतकरी मित्र (कृषी सल्लागार)">Shetkari Mitra</strong>
+      <span data-en="A hyperlocal decision-support system built for Maharashtra's vegetable growers, delivering multi-horizon price forecasting and storage-aware harvest guidance across 20 key APMC yards."
+            data-mr="महाराष्ट्रातील भाजीपाला उत्पादक शेतकऱ्यांसाठी २० मुख्य कृषी बाजार समित्यांमधील ५, ७ आणि १४ दिवसांचे अचूक भाव अंदाज व विक्री सल्ला देणारी प्रणाली.">
+        A hyperlocal decision-support system built for Maharashtra's vegetable growers, delivering multi-horizon price forecasting and storage-aware harvest guidance across 20 key APMC yards.
+      </span>
+    </p>
+    <p style="margin-top: 14px;">
+      <strong data-en="Developed by Viksit Minds Team" data-mr="विकसित माइंड्स (Viksit Minds) टीम द्वारे विकसित">Developed by Viksit Minds Team</strong>
+      <span data-en="A Final Year Engineering Initiative focused on agricultural price stability and transparent farmer market access."
+            data-mr="शेतकऱ्यांना रास्त भाव मिळावा आणि पारदर्शक बाजारपेठ उपलब्ध व्हावी या उद्देशाने अंतिम वर्ष अभियांत्रिकी प्रकल्पांतर्गत निर्मित.">
+        A Final Year Engineering Initiative focused on agricultural price stability and transparent farmer market access.
+      </span>
+    </p>
+  </div>
+  <nav class="footer-links" aria-label="Quick links">
+    <h2 data-en="Platform Navigation" data-mr="प्लॅटफॉर्म विभाग">Platform Navigation</h2>
+    <ul>
+      <li><a href="/" data-en="Home" data-mr="मुख्यपृष्ठ">Home</a></li>
+      <li><a href="/dashboard" data-en="AI Engine & Forecast" data-mr="AI बाजारभाव अंदाज">AI Engine & Forecast</a></li>
+      <li><a href="/apmc" data-en="Maharashtra APMC Directory" data-mr="महाराष्ट्र बाजार समित्या यादी">Maharashtra APMC Directory</a></li>
+    </ul>
+  </nav>
+  <nav class="footer-links" aria-label="Account links">
+    <h2 data-en="Account & Profile" data-mr="खाते व तपशील">Account & Profile</h2>
+    <ul>
+      <li><a href="/profile" data-en="Farmer Profile" data-mr="शेतकरी प्रोफाइल">Farmer Profile</a></li>
+      <li><a href="/update" data-en="Edit Profile & Password" data-mr="प्रोफाइल व पासवर्ड बदला">Edit Profile & Password</a></li>
+      <li><a href="/logout" data-en="Sign Out" data-mr="बाहेर पडा (Log out)">Sign Out</a></li>
+    </ul>
+  </nav>
+</footer>
+</div>
+
+<script>
+  // Mobile drawer menu toggle
+  var btn = document.querySelector(".menu-btn"), hdr = document.querySelector(".site-header");
+  if (btn) {
+    btn.addEventListener("click", function () {
+      var open = hdr.classList.toggle("nav-open");
+      btn.setAttribute("aria-expanded", open);
+    });
+  }
+
+  // Instant English / Marathi Language Switcher
+  function setLanguage(lang) {
+    localStorage.setItem("shetkari_language", lang);
+
+    const btnEn = document.getElementById("btn-lang-en");
+    const btnMr = document.getElementById("btn-lang-mr");
+
+    if (lang === "mr") {
+      btnMr.classList.add("active");
+      btnEn.classList.remove("active");
+    } else {
+      btnEn.classList.add("active");
+      btnMr.classList.remove("active");
+    }
+
+    // Translate all standard elements with data-en / data-mr
+    document.querySelectorAll("[data-en]").forEach(el => {
+      const text = el.getAttribute("data-" + lang);
+      if (text) {
+        el.innerText = text;
+      }
+    });
+
+    // Notify active page script if custom re-render is supported
+    if (typeof onLanguageChange === "function") {
+      onLanguageChange(lang);
+    }
+  }
+
+  // Restore user's language preference on load
+  window.addEventListener("DOMContentLoaded", () => {
+    const saved = localStorage.getItem("shetkari_language") || "en";
+    setLanguage(saved);
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+/* Update-profile page */
+.update{max-width:760px;margin:0 auto;padding:30px clamp(16px,5vw,32px) 64px}
+.back{display:inline-block;font-size:14px;font-weight:600;text-decoration:underline;text-underline-offset:4px;margin-bottom:14px}
+.update h1{font-size:30px;margin-bottom:22px}
+.panel{border:1px solid var(--line);border-radius:20px;padding:26px clamp(18px,4vw,30px) 28px;margin-bottom:26px}
+.panel h2{font-size:19px;margin:26px 0 14px}
+.panel h2:first-of-type{margin-top:0}
+.hint{font-size:13px;color:var(--mid);margin:-6px 0 14px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:0 22px}
+label,legend{display:block;font-size:14px;font-weight:600;margin-bottom:6px}
+.input{display:flex;align-items:center;gap:10px;height:50px;border:1px solid var(--line);border-radius:10px;padding:0 14px;margin-bottom:18px;background:var(--white)}
+.input:focus-within{border-color:var(--black)}
+.input input{flex:1;border:0;outline:0;font-size:16px;background:transparent;min-width:0;height:100%}
+.input.is-locked{background:var(--grey);color:var(--mid)}
+.input.narrow{max-width:340px}
+.code{padding-right:10px;border-right:1px solid var(--line);color:var(--mid);font-size:15px}
+.group{border:0;margin-bottom:20px}
+.segment{display:flex;flex-wrap:wrap;background:var(--grey);border-radius:999px}
+.segment label{flex:1;margin:0;min-width:110px}
+.segment input{position:absolute;opacity:0;pointer-events:none}
+.segment span{display:block;text-align:center;padding:9px 8px;border-radius:999px;border:2px solid transparent;font-size:15px;font-weight:400;cursor:pointer}
+.segment input:checked+span{border-color:var(--black);background:var(--white);font-weight:600}
+.segment input:focus-visible+span{outline:2px solid var(--black);outline-offset:2px}
+.panel>.btn{margin-top:6px;min-width:200px}
+.panel.danger{border-color:var(--danger)}
+.panel.danger h2{color:var(--danger)}
+@media(max-width:560px){.grid{grid-template-columns:1fr}}

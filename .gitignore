@@ -1,0 +1,17 @@
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local user SQLite database (keep sensitive credentials offline)
+users.db
+
+# Virtual environments & IDE
+venv/
+.env
+.vscode/
+.idea/
+
+# OS metadata
+.DS_Store
+Thumbs.db

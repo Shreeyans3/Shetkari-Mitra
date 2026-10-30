@@ -1,0 +1,19 @@
+<section class="logout state-$state">
+  <div class="logout-card">
+    <div class="confirm">
+      <h1>Log out?</h1>
+      <p>You will need to log in again to update or view your profile.</p>
+      <form method="post" action="/logout">
+        <input type="hidden" name="csrf" value="$csrf">
+        <button class="btn" type="submit">Log out</button>
+      </form>
+      <a class="btn btn-outline" href="/dashboard">Stay logged in</a>
+    </div>
+    <div class="done">
+      <h1>You are logged out</h1>
+      <p>Your session has ended. See you again soon.</p>
+      <a class="btn" href="/auth">Log in again</a>
+      <a class="btn btn-outline" href="/" style="text-decoration: none;">Back to home</a>
+    </div>
+  </div>
+</section>

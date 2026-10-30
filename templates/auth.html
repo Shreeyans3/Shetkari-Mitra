@@ -1,0 +1,47 @@
+<section class="auth mode-$mode">
+  <div class="auth-card">
+     <div class="avatar" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="4.2"/><path d="M3.5 21c0-4.6 3.8-7.5 8.5-7.5s8.5 2.9 8.5 7.5z"/></svg></div> 
+
+    <div class="tabs" role="tablist">
+      <a class="tab tab-login" href="/auth?mode=login" role="tab">Log in</a>
+      <a class="tab tab-signup" href="/auth?mode=signup" role="tab">Sign up</a>
+    </div>
+    $message
+
+    <form class="form form-login" method="post" action="/login">
+      <label for="l_email">Email</label>
+      <div class="input"><input id="l_email" name="email" type="email" value="$login_email" placeholder="Enter your email" autocomplete="email" required></div>
+      <label for="l_password">Password</label>
+      <div class="input"><input id="l_password" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" required></div>
+      <button class="btn" type="submit">Log in</button>
+      <p class="switch">Not registered yet? <a href="/auth?mode=signup" data-mode="signup">Sign up</a></p>
+    </form>
+
+    <form class="form form-signup" method="post" action="/signup">
+      <label for="s_name">Full name</label>
+      <div class="input"><input id="s_name" name="full_name" type="text" value="$su_name" placeholder="Full name" autocomplete="name" required></div>
+      <label for="s_mobile">Mobile number (optional)</label>
+      <div class="input"><span class="code">+91</span><input id="s_mobile" name="mobile" type="tel" value="$su_mobile" placeholder="10-digit number" autocomplete="tel-national" inputmode="numeric" maxlength="10" pattern="[0-9]{10}"></div>
+      <label for="s_email">Email</label>
+      <div class="input"><input id="s_email" name="email" type="email" value="$su_email" placeholder="Email address" autocomplete="email" required></div>
+      <label for="s_password">Password (min 8 characters)</label>
+      <div class="input"><input id="s_password" name="password" type="password" minlength="8" autocomplete="new-password" required></div>
+      <label for="s_confirm">Confirm password</label>
+      <div class="input"><input id="s_confirm" name="confirm_password" type="password" minlength="8" autocomplete="new-password" required></div>
+      <button class="btn" type="submit">Create account</button>
+      <p class="switch">Already registered? <a href="/auth?mode=login" data-mode="login">Log in</a></p>
+    </form>
+  </div>
+</section>
+<script>
+  // Switch tabs without a page reload (the links still work without JavaScript).
+  document.querySelectorAll(".tab, [data-mode]").forEach(function (a) {
+    a.addEventListener("click", function (e) {
+      e.preventDefault();
+      var mode = a.href.indexOf("signup") > -1 ? "signup" : "login";
+      var box = document.querySelector(".auth");
+      box.className = "auth mode-" + mode;
+      var msg = document.querySelector(".auth .message"); if (msg) msg.remove();
+    });
+  });
+</script>

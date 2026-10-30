@@ -1,0 +1,241 @@
+<section class="profile-page-wrapper">
+  <!-- Profile Header Card -->
+  <div class="farmer-id-card">
+    <div class="farmer-avatar-badge">
+      <span class="avatar-sym">👤</span>
+    </div>
+    
+    <div class="farmer-meta-block">
+      <div class="farmer-title-row">
+        <h1>$full_name</h1>
+        <span class="verified-pill">● Verified Farmer Account</span>
+      </div>
+      <p class="farmer-subtitle">Shetkari Mitra • Developed by Viksit Minds</p>
+    </div>
+
+    <div class="farmer-top-actions">
+      <a class="btn-primary-action" href="/update">
+        <span>✏️</span> Edit Profile & Password
+      </a>
+      <a class="btn-logout-action" href="/logout">
+        <span>🚪</span> Sign Out
+      </a>
+    </div>
+  </div>
+
+  $message
+
+  <!-- Detailed Account Specs -->
+  <div class="specs-panel">
+    <h2>Account Information</h2>
+    <div class="specs-grid">
+      <div class="spec-tile">
+        <span class="spec-label">Registered Email</span>
+        <span class="spec-value">$email</span>
+      </div>
+      <div class="spec-tile">
+        <span class="spec-label">Mobile Contact</span>
+        <span class="spec-value">$mobile</span>
+      </div>
+      <div class="spec-tile">
+        <span class="spec-label">Member Since</span>
+        <span class="spec-value">$created_at</span>
+      </div>
+      <div class="spec-tile">
+        <span class="spec-label">Platform Role</span>
+        <span class="spec-value">Agricultural Producer / Trader</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Platform Coverage Stats -->
+  <div class="specs-panel">
+    <h2>System Coverage & Data Access</h2>
+    <div class="stats-overview-grid">
+      <div class="stat-card">
+        <span class="stat-num">20</span>
+        <span class="stat-name">Monitored APMC Mandis</span>
+        <p class="stat-desc">Statewide wholesale market yards across 16 Maharashtra districts.</p>
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-num">8</span>
+        <span class="stat-name">Perishable Vegetable Crops</span>
+        <p class="stat-desc">Tomato, Onion, Potato, Green Chilli, Brinjal, Cabbage, Cauliflower, Bhindi.</p>
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-num">3</span>
+        <span class="stat-name">Forecasting Horizons</span>
+        <p class="stat-desc">Multi-horizon projections for 5-day, 7-day, and 14-day market arrivals.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .profile-page-wrapper {
+    max-width: 960px;
+    margin: 36px auto 60px;
+    padding: 0 clamp(16px, 4vw, 32px);
+  }
+  .farmer-id-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+    margin-bottom: 24px;
+  }
+  .farmer-avatar-badge {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    border: 2px solid #cbd5e1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+  }
+  .farmer-meta-block {
+    flex: 1;
+    min-width: 240px;
+  }
+  .farmer-title-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .farmer-title-row h1 {
+    font-size: 26px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0;
+  }
+  .verified-pill {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #15803d;
+    background: #dcfce7;
+    padding: 3px 10px;
+    border-radius: 999px;
+  }
+  .farmer-subtitle {
+    font-size: 14px;
+    color: #64748b;
+    margin: 4px 0 0;
+  }
+  .farmer-top-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .btn-primary-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: #1e3a29;
+    color: #ffffff;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background 0.2s ease;
+  }
+  .btn-primary-action:hover {
+    background: #14281c;
+  }
+  .btn-logout-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fca5a5;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background 0.2s ease;
+  }
+  .btn-logout-action:hover {
+    background: #fecaca;
+  }
+  .specs-panel {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+    margin-bottom: 24px;
+  }
+  .specs-panel h2 {
+    font-size: 18px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .specs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+  }
+  .spec-tile {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .spec-label {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #64748b;
+  }
+  .spec-value {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0f172a;
+  }
+  .stats-overview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 18px;
+  }
+  .stat-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 20px;
+  }
+  .stat-num {
+    font-size: 28px;
+    font-weight: 900;
+    color: #166534;
+    display: block;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0f172a;
+    display: block;
+    margin-bottom: 6px;
+  }
+  .stat-desc {
+    font-size: 12.5px;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.5;
+  }
+</style>
